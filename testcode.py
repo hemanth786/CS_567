@@ -1,3 +1,4 @@
+# testcode.py
 import unittest
 from code import Book, Patron, Library
 from datetime import datetime, timedelta
@@ -41,6 +42,14 @@ class TestLibraryManagementSystem(unittest.TestCase):
         self.assertEqual(self.library.checkin_book("To Kill a Mockingbird", 2),
                          "To Kill a Mockingbird checked in successfully by Patron 2.")
 
+    def test_reserve_book(self):
+        self.assertEqual(self.library.reserve_book("The Great Gatsby", 1),
+                         "The Great Gatsby reserved successfully by Patron 1.")
+        self.assertEqual(self.library.reserve_book("The Great Gatsby", 2),
+                         "Sorry, The Great Gatsby is reserved by another patron.")
+        self.assertEqual(self.library.reserve_book("Nonexistent Book", 1),
+                         "Error: Nonexistent Book does not exist in the library.")
+
     def test_display_available_books(self):
         available_books = self.library.display_available_books()
         self.assertEqual(len(available_books), 2)
@@ -60,8 +69,17 @@ class TestLibraryManagementSystem(unittest.TestCase):
 
         overdue_books = self.library.overdue_books()
         self.assertEqual(len(overdue_books), 2)
-        self.assertIn("The Great Gatsby is overdue for Patron 1.", overdue_books)
-        self.assertIn("To Kill a Mockingbird is overdue for Patron 2.", overdue_books)
+        self.assertIn("The Great Gatsby is overdue for Alice (ID: 1). Due date was", overdue_books[0])
+        self.assertIn("To Kill a Mockingbird is overdue for Bob (ID: 2). Due date was", overdue_books[1])
+
+    def test_get_popular_books(self):
+        self.library.checkout_book("The Great Gatsby", 1, datetime.now() - timedelta(days=10))
+        self.library.checkout_book("The Great Gatsby", 2, datetime.now() - timedelta(days=5))
+        self.library.checkout_book("To Kill a Mockingbird", 1, datetime.now() - timedelta(days=3))
+
+        popular_books = self.library.get_popular_books(num_books=1)
+        self.assertEqual(len(popular_books), 1)
+        self.assertIn("The Great Gatsby", popular_books[0])
 
 if __name__ == "__main__":
     unittest.main()
