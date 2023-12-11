@@ -1,4 +1,4 @@
-# testcode.py
+# test_library.py
 import unittest
 from code import Book, Patron, Library
 from datetime import datetime, timedelta
@@ -38,5 +38,31 @@ class TestLibraryManagementSystem(unittest.TestCase):
         self.library.checkout_book("To Kill a Mockingbird", 2, due_date1)
 
         self.assertEqual(self.library.checkin_book("The Great Gatsby", 1),
-                         "The Great Gatsby checked in successfully by Patron 1. Checked out on")
-        self.assertEqual(self.library.checkin_book("To Kill a Mockingbird", 2)
+                         "The Great Gatsby checked in successfully by Patron 1.")
+        self.assertEqual(self.library.checkin_book("To Kill a Mockingbird", 2),
+                         "To Kill a Mockingbird checked in successfully by Patron 2.")
+
+    def test_display_available_books(self):
+        available_books = self.library.display_available_books()
+        self.assertEqual(len(available_books), 2)
+        self.assertEqual(available_books[0].title, "The Great Gatsby")
+
+    def test_search_books(self):
+        search_results = self.library.search_books("Great")
+        self.assertEqual(len(search_results), 1)
+        self.assertEqual(search_results[0].title, "The Great Gatsby")
+
+    def test_overdue_books(self):
+        due_date1 = datetime.now() - timedelta(days=7)
+        due_date2 = datetime.now() - timedelta(days=14)
+
+        self.library.checkout_book("The Great Gatsby", 1, due_date1)
+        self.library.checkout_book("To Kill a Mockingbird", 2, due_date2)
+
+        overdue_books = self.library.overdue_books()
+        self.assertEqual(len(overdue_books), 2)
+        self.assertIn("The Great Gatsby is overdue for Patron 1.", overdue_books)
+        self.assertIn("To Kill a Mockingbird is overdue for Patron 2.", overdue_books)
+
+if __name__ == "__main__":
+    unittest.main()
