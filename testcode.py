@@ -39,4 +39,4 @@ class TestLibraryManagementSystem(unittest.TestCase):
 
         self.assertEqual(self.library.checkin_book("The Great Gatsby", 1),
                          "The Great Gatsby checked in successfully by Patron 1. Checked out on")
-        self.assertEqual(self.library.checkin_book("To Kill a Mockingbird", 2
+        self.assertEqual(self.library.checkin_book("To Kill a Mockingbird", 2)
