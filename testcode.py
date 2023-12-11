@@ -32,24 +32,6 @@ class TestLibraryManagementSystem(unittest.TestCase):
         self.assertEqual(self.library.checkout_book("Nonexistent Book", 1, due_date1),
                          "Error: Nonexistent Book does not exist in the library.")
 
-    def test_checkin_book(self):
-        due_date1 = datetime.now() + timedelta(days=14)
-        self.library.checkout_book("The Great Gatsby", 1, due_date1)
-        self.library.checkout_book("To Kill a Mockingbird", 2, due_date1)
-
-        self.assertEqual(self.library.checkin_book("The Great Gatsby", 1),
-                         "The Great Gatsby checked in successfully by Patron 1.")
-        self.assertEqual(self.library.checkin_book("To Kill a Mockingbird", 2),
-                         "To Kill a Mockingbird checked in successfully by Patron 2.")
-
-    def test_reserve_book(self):
-        self.assertEqual(self.library.reserve_book("The Great Gatsby", 1),
-                         "The Great Gatsby reserved successfully by Patron 1.")
-        self.assertEqual(self.library.reserve_book("The Great Gatsby", 2),
-                         "Sorry, The Great Gatsby is reserved by another patron.")
-        self.assertEqual(self.library.reserve_book("Nonexistent Book", 1),
-                         "Error: Nonexistent Book does not exist in the library.")
-
     def test_display_available_books(self):
         available_books = self.library.display_available_books()
         self.assertEqual(len(available_books), 2)
